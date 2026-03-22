@@ -176,11 +176,11 @@ npm run dev
 
 ### Frontend
 
-* Vercel / Netlify
+* Vercel
 
 ### Backend
 
-* Render / Railway
+* Render 
 
 ---
 
