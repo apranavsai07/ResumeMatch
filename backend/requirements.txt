@@ -6,6 +6,7 @@ pydantic
 scikit-learn
 numpy
 PyPDF2
+PyMuPDF
 
 google-generativeai
 python-dotenv
