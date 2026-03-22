@@ -3,10 +3,6 @@ uvicorn
 python-multipart
 pydantic
 
-sentence-transformers==2.2.2
-torch==2.2.2+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
-
 scikit-learn
 numpy
 PyPDF2

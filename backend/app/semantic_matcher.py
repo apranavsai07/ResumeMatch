@@ -1,14 +1,38 @@
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+from dotenv import load_dotenv
+import numpy as np
+import os
+from google import genai
+load_dotenv() 
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+
+def cosine_similarity(vec1, vec2):
+    vec1 = np.array(vec1)
+    vec2 = np.array(vec2)
+    return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
 
 def compute_similarity(resume_text, jd_text):
-    embeddings = model.encode([resume_text, jd_text])
+    try:
+        # Get embeddings from Gemini
+        res_embed = client.models.embed_content(
+            model="gemini-embedding-2-preview",
+            contents=resume_text
+        )
 
-    resume_vector = embeddings[0].reshape(1, -1)
-    jd_vector = embeddings[1].reshape(1, -1)
+        jd_embed = client.models.embed_content(
+            model="gemini-embedding-2-preview",
+            contents=jd_text
+        )
 
-    similarity = cosine_similarity(resume_vector, jd_vector)[0][0]
+        score = cosine_similarity(
+            res_embed.embeddings[0].values,
+            jd_embed.embeddings[0].values
+        )
 
-    return float(round(similarity * 100, 2))
+        return float(score * 100)
+
+    except Exception as e:
+        print("Embedding error:", e)
+        return 0.0

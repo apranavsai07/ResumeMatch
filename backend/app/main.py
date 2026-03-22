@@ -36,7 +36,7 @@ async def analyze_resume(
     matched_skills = list(set(resume_skills) & set(jd_skills))
     missing_skills = list(set(jd_skills) - set(resume_skills))
 
-    semantic_score = float(compute_similarity(cleaned_resume, cleaned_jd))
+    semantic_score = float(compute_similarity(resume_text, jd_text))
     total_jd_skills = len(jd_skills)
 
     if total_jd_skills == 0:
