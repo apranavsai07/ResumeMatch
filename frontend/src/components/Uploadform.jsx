@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { JOB_CATEGORIES, JOB_DESCRIPTIONS } from "./Jobdescriptions";
+import { JOB_CATEGORIES, JOB_DESCRIPTIONS } from "./jobDescriptions";
 
 // step: "choose" | "paste" | "pick" | "upload"
 export default function UploadForm({ setData, onBack }) {
@@ -22,7 +22,7 @@ export default function UploadForm({ setData, onBack }) {
     const formData = new FormData();
     formData.append("jd_text", jd);
     formData.append("file", file);
-    const res = await fetch("https://career-ai-backend-526q.onrender.com", {
+    const res = await fetch("https://career-ai-backend-526q.onrender.com/analyze/", {
       method: "POST", body: formData,
     });
     const data = await res.json();
@@ -41,7 +41,7 @@ export default function UploadForm({ setData, onBack }) {
           ← {step === "choose" ? "Back" : "Change"}
         </button>
         <span style={{ fontSize: "35px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.2px" }}>
-           <span className="nav-ai">Career AI</span>
+           <span className="nav-ai">ResumeMatch</span>
         </span>
         <span />
       </div>
@@ -160,14 +160,26 @@ export default function UploadForm({ setData, onBack }) {
               ))}
             </div>
 
-            {/* JD preview */}
+            {/* JD — full editable textarea once role is selected */}
             {selectedRole && (
-              <div className="jd-preview">
-                <div className="jd-preview-header">
-                  <span className="jd-preview-label">JD loaded — {selectedRole}</span>
-                  <span className="jd-preview-check">✓ Ready</span>
+              <div className="jd-loaded-wrap">
+                <div className="jd-loaded-header">
+                  <div className="jd-loaded-meta">
+                    <span className="jd-preview-check">✓</span>
+                    <span className="jd-preview-label">{selectedRole} — Job Description</span>
+                  </div>
+                  <span className="jd-edit-hint">You can read and edit below</span>
                 </div>
-                <p className="jd-preview-text">{jd.slice(0, 320)}…</p>
+                <textarea
+                  className="jd-textarea jd-textarea-loaded"
+                  value={jd}
+                  onChange={(e) => setJd(e.target.value)}
+                />
+                <div className="word-count" style={{
+                  color: wordCount < 80 ? "var(--yellow)" : "var(--green)",
+                }}>
+                  {wordCount} words — {wordCount >= 80 ? "Good to go" : "add more detail for better results"}
+                </div>
               </div>
             )}
 

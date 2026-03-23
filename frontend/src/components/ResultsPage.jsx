@@ -13,7 +13,7 @@ export default function ResultsPage({ data, onBack, onReset }) {
       <div className="results-nav">
         <button className="back-btn" onClick={onBack}>← Analyze Again</button>
         <span style={{ fontSize: "35px", fontWeight: 600, color: "var(--text-primary)", letterSpacing: "-0.2px" }}>
-           <span className="nav-ai">Career AI</span>
+           <span className="nav-ai">ResumeMatch</span>
         </span>
         <div className="results-nav-right">
           <button className="ghost-btn" onClick={onReset}>New Analysis</button>
