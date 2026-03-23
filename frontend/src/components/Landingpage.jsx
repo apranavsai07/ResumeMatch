@@ -92,7 +92,7 @@ export default function LandingPage({ onStart }) {
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
-  const title = "Career AI";
+  const title = "ResumeMatch";
 
   return (
     <div className="landing">
