@@ -9,5 +9,5 @@ numpy
 PyPDF2
 PyMuPDF
 
-google-generativeai
+google-genai
 python-dotenv
