@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { JOB_CATEGORIES, JOB_DESCRIPTIONS } from "./jobDescriptions";
+import { JOB_CATEGORIES, JOB_DESCRIPTIONS } from "./Jobdescriptions";
 
 // step: "choose" | "paste" | "pick" | "upload"
 export default function UploadForm({ setData, onBack }) {
