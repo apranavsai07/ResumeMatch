@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 // Clean stroke-based SVG icons — 24×24, 1.5px stroke, round caps
 const Icons = {
@@ -80,17 +80,20 @@ const STEPS = [
 
 export default function LandingPage({ onStart }) {
   const [phase, setPhase] = useState(0);
-  // phase 0 = nothing, 1 = chars animating, 2 = eyebrow+sub, 3 = steps, 4 = cta
   const [hoveredStep, setHoveredStep] = useState(null);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
-    // small initial delay so browser has painted before animation fires
     const t0 = setTimeout(() => setPhase(1), 120);
     const t1 = setTimeout(() => setPhase(2), 900);
     const t2 = setTimeout(() => setPhase(3), 1300);
     const t3 = setTimeout(() => setPhase(4), 1900);
     return () => { clearTimeout(t0); clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
+
+  const scrollToCTA = () => {
+    ctaRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   const title = "ResumeMatch";
 
@@ -102,7 +105,6 @@ export default function LandingPage({ onStart }) {
           <span className="eyebrow-dot" /> AI-Powered Resume Analyzer
         </div>
 
-        {/* Title — chars rendered only once phase >= 1 */}
         <h1 className="landing-title" aria-label={title}>
           {title.split("").map((ch, i) => (
             <span
@@ -137,9 +139,11 @@ export default function LandingPage({ onStart }) {
                   ? `linear-gradient(145deg, rgba(15,17,30,0.95), ${s.hoverGlow})`
                   : "rgba(15,17,30,0.82)",
                 transform: isHovered ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
+                cursor: "pointer",
               }}
               onMouseEnter={() => setHoveredStep(i)}
               onMouseLeave={() => setHoveredStep(null)}
+              onClick={scrollToCTA}
             >
               {i < STEPS.length - 1 && <div className="step-arrow">›</div>}
 
@@ -180,7 +184,10 @@ export default function LandingPage({ onStart }) {
       </div>
 
       {/* ── CTA ───────────────────────────────────────────── */}
-      <div className={`landing-cta ${phase >= 4 ? "lp-visible" : ""}`}>
+      <div
+        ref={ctaRef}
+        className={`landing-cta ${phase >= 4 ? "lp-visible" : ""}`}
+      >
         <button className="cta-btn" onClick={onStart}>
           <span>Analyze My Resume</span>
           <span className="cta-arrow">→</span>
