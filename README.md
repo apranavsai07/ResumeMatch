@@ -1,6 +1,6 @@
-# Career AI – Resume Analyzer & Job Matcher
+# ResumeMatch – Resume Analyzer & Job Matcher
 
-Career AI is a full-stack web application that analyzes resumes and evaluates how well they match a target job role. It combines rule-based techniques with AI-powered semantic analysis to generate meaningful insights and actionable career recommendations.
+ResumeMatch is a full-stack web application that analyzes resumes and evaluates how well they match a target job role. It combines rule-based techniques with AI-powered semantic analysis to generate meaningful insights and actionable career recommendations.
 
 ---
 
