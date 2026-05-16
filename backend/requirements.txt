@@ -4,6 +4,7 @@ python-multipart
 pydantic
 pandas
 
+cohere
 scikit-learn
 numpy
 PyPDF2

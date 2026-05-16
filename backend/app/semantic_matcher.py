@@ -1,38 +1,99 @@
 from dotenv import load_dotenv
-import numpy as np
 import os
-from google import genai
-load_dotenv() 
+import numpy as np
+import cohere
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity as sklearn_cosine_similarity
+
+load_dotenv()
+
+# Cohere client
+co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 
+# -----------------------------
+# COSINE SIMILARITY
+# -----------------------------
 def cosine_similarity(vec1, vec2):
+
     vec1 = np.array(vec1)
     vec2 = np.array(vec2)
-    return np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
+    return np.dot(vec1, vec2) / (
+        np.linalg.norm(vec1) * np.linalg.norm(vec2)
+    )
 
 
+# -----------------------------
+# COHERE EMBEDDINGS
+# -----------------------------
+def embedding_similarity(resume_text, jd_text):
+
+    response = co.embed(
+        texts=[resume_text, jd_text],
+        model="embed-english-light-v3.0",
+        input_type="search_document"
+    )
+
+    vec1 = response.embeddings[0]
+    vec2 = response.embeddings[1]
+
+    similarity = cosine_similarity(vec1, vec2)
+
+    return float(similarity * 100)
+
+
+# -----------------------------
+# TF-IDF FALLBACK
+# -----------------------------
+def tfidf_similarity(resume_text, jd_text):
+
+    documents = [resume_text, jd_text]
+
+    vectorizer = TfidfVectorizer(
+        stop_words='english',
+        ngram_range=(1,2)
+    )
+
+    tfidf_matrix = vectorizer.fit_transform(documents)
+
+    similarity = sklearn_cosine_similarity(
+        tfidf_matrix[0:1],
+        tfidf_matrix[1:2]
+    )[0][0]
+
+    return float(similarity * 100)
+
+
+# -----------------------------
+# MAIN FUNCTION
+# -----------------------------
 def compute_similarity(resume_text, jd_text):
+
     try:
-        # Get embeddings from Gemini
-        res_embed = client.models.embed_content(
-            model="gemini-embedding-2-preview",
-            contents=resume_text
-        )
 
-        jd_embed = client.models.embed_content(
-            model="gemini-embedding-2-preview",
-            contents=jd_text
-        )
+        print("Using Cohere embeddings...")
 
-        score = cosine_similarity(
-            res_embed.embeddings[0].values,
-            jd_embed.embeddings[0].values
+        return embedding_similarity(
+            resume_text,
+            jd_text
         )
-
-        return float(score * 100)
 
     except Exception as e:
-        print("Embedding error:", e)
-        return 0.0
+
+        print("Cohere embedding failed:", e)
+        print("Using TF-IDF fallback...")
+
+        try:
+
+            return tfidf_similarity(
+                resume_text,
+                jd_text
+            )
+
+        except Exception as fallback_error:
+
+            print("TF-IDF failed:", fallback_error)
+
+            return 50.0
