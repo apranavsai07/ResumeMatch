@@ -3,14 +3,11 @@ uvicorn
 python-multipart
 pydantic
 pandas
-
 scikit-learn
 numpy
 sentence-transformers
 torch
-
 PyPDF2
 PyMuPDF
-
 python-dotenv
 google-genai
