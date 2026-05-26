@@ -4,11 +4,13 @@ python-multipart
 pydantic
 pandas
 
-cohere
 scikit-learn
 numpy
+sentence-transformers
+torch
+
 PyPDF2
 PyMuPDF
 
-google-genai
 python-dotenv
+google-genai
