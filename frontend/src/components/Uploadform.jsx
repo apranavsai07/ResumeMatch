@@ -22,7 +22,7 @@ export default function UploadForm({ setData, onBack }) {
     const formData = new FormData();
     formData.append("jd_text", jd);
     formData.append("file", file);
-    const res = await fetch("https://career-ai-backend-526q.onrender.com/analyze/", {
+    const res = await fetch("https://apranavsai07-resumematch-backend.hf.space/analyze/", {
       method: "POST", body: formData,
     });
     const data = await res.json();
